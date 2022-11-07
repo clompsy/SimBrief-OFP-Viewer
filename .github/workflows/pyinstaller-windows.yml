@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: PyInstaller Windows
-      uses: clompsy/SimBrief-OFP-Viewer@main
+      uses: JackMcKew/pyinstaller-action-windows@main
       with:
         path: src
 
