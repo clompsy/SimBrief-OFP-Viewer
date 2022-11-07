@@ -1,206 +1,202 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} OFP for {{ data['OFP']['general']['icao_airline'] }}{{ data['OFP']['general']['flight_number'] }} {{ data['OFP']['origin']['icao_code'] }}-{{ data['OFP']['destination']['icao_code'] }} {% endblock %}</h1>
+<h1>{% block title %} OFP for {{ data['OFP']['general']['icao_airline'] }}{{ data['OFP']['general']['flight_number'] }} {{ data['OFP']['origin']['icao_code'] }}-{{ data['OFP']['destination']['icao_code'] }} {% endblock %}</h1>
 
-	<div class="accordion">
+<div class="accordion">
+
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="panelsStayOpen-heading-origin">
+			<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-origin" aria-expanded="true" aria-controls="panelsStayOpen-collapse-origin">
+			Origin {{ data['OFP']['origin']['icao_code'] }}/{{ data['OFP']['origin']['iata_code'] }}
+			</button>
+		</h2>
+		<div id="panelsStayOpen-collapse-origin" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-heading-origin">
+			<div class="accordion-body">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th scope="col">RWY</th>
+							<th scope="col">Elev.</th>
+							<th scope="col">T.Alt</th>
+							<th scope="col">T.FL</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>{{ data['OFP']['origin']['plan_rwy'] }}</td>
+							<td>{{ data['OFP']['origin']['elevation'] }}ft</td>
+							<td>{{ data['OFP']['origin']['trans_alt'] }}ft</td>
+							<td>{{ data['OFP']['origin']['trans_level'] }}ft</td>
+						</tr>
+				</table>
+				<nav>
+					<div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+						<a class="nav-link active" id="nav-origin-metar-tab" data-bs-toggle="tab" href="#nav-origin-metar" role="tab" aria-controls="nav-origin-metar" aria-selected="true">METAR</a>
+						<a class="nav-link" id="nav-origin-taf-tab" data-bs-toggle="tab" href="#nav-origin-taf" role="tab" aria-controls="nav-origin-taf" aria-selected="false">TAF</a>
+						<a class="nav-link" id="nav-origin-atis-tab" data-bs-toggle="tab" href="#nav-origin-atis" role="tab" aria-controls="nav-origin-atis" aria-selected="false">ATIS</a>
+					</div>
+				</nav>
+				<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade active show" id="nav-origin-metar" role="tabpanel" aria-labelledby="nav-origin-metar-tab">
+						<p class="px-3 mono" id="content-origin-metar">{{ data['OFP']['origin']['metar'] }}</p>
+						<button type="button" class="btn btn-dark" onClick="update_metar('content-origin-metar', '{{ data['OFP']['origin']['icao_code'] }}')">Update</button>
+					</div>
+					<div class="tab-pane fade" id="nav-origin-taf" role="tabpanel" aria-labelledby="nav-origin-taf-tab">
+						<p class="px-3 mono">{{ data['OFP']['origin']['taf'] }}</p>
+					</div>
+					<div class="tab-pane fade" id="nav-origin-atis" role="tabpanel" aria-labelledby="nav-origin-atis-tab">
+						<p class="px-3 mono">{{ data['OFP']['origin']['atis']['message'] }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="panelsStayOpen-heading-origin">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-origin" aria-expanded="true" aria-controls="panelsStayOpen-collapse-origin">
-        Origin {{ data['OFP']['origin']['icao_code'] }}/{{ data['OFP']['origin']['iata_code'] }}
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapse-origin" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-heading-origin">
-      <div class="accordion-body">
-			<table class="table table-striped">
-              <thead>
-              <tr>
-                <th scope="col">RWY</th>
-				<th scope="col">Elev.</th>
-				<th scope="col">T.Alt</th>
-				<th scope="col">T.FL</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>{{ data['OFP']['origin']['plan_rwy'] }}</td>
-                <td>{{ data['OFP']['origin']['elevation'] }}ft</td>
-                <td>{{ data['OFP']['origin']['trans_alt'] }}ft</td>
-                <td>{{ data['OFP']['origin']['trans_level'] }}ft</td>
-              </tr>
-            </table>
-			
-			<nav>
-              <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
-                <a class="nav-link active" id="nav-origin-metar-tab" data-bs-toggle="tab" href="#nav-origin-metar" role="tab" aria-controls="nav-origin-metar" aria-selected="true">METAR</a>
-                <a class="nav-link" id="nav-origin-taf-tab" data-bs-toggle="tab" href="#nav-origin-taf" role="tab" aria-controls="nav-origin-taf" aria-selected="false">TAF</a>
-                <a class="nav-link" id="nav-origin-atis-tab" data-bs-toggle="tab" href="#nav-origin-atis" role="tab" aria-controls="nav-origin-atis" aria-selected="false">ATIS</a>
-              </div>
-            </nav>
-			
-			<div class="tab-content" id="nav-tabContent">
-              <div class="tab-pane fade active show" id="nav-origin-metar" role="tabpanel" aria-labelledby="nav-origin-metar-tab">
-				<p class="px-3 mono" id="content-origin-metar">{{ data['OFP']['origin']['metar'] }}</p>
-                <button type="button" class="btn btn-dark" onClick="update_metar('content-origin-metar', '{{ data['OFP']['origin']['icao_code'] }}')">Update</button>
-              </div>
-              <div class="tab-pane fade" id="nav-origin-taf" role="tabpanel" aria-labelledby="nav-origin-taf-tab">
-                <p class="px-3 mono">{{ data['OFP']['origin']['taf'] }}</p>
-              </div>
-              <div class="tab-pane fade" id="nav-origin-atis" role="tabpanel" aria-labelledby="nav-origin-atis-tab">
-                <p class="px-3 mono">{{ data['OFP']['origin']['atis']['message'] }}</p>
-              </div>
-            </div>
-      </div>
-    </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="panelsStayOpen-headingRoute">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseRoute" aria-expanded="true" aria-controls="panelsStayOpen-collapseRoute">
-        Route
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapseRoute" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingRoute">
-      <div class="accordion-body">
-			<p class="mono">{{ data['OFP']['general']['route'] }}</p>
-			
-			<table class="table table-striped">
-              <thead>
-              <tr>
-				<th scope="col">Dist</th>
-                <th scope="col">Wind</th>
-                <th scope="col">CI</th>
-                <th scope="col">Initial</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>{{ data['OFP']['general']['route_distance'] }}nm</td>
-                <td>{{ data['OFP']['general']['avg_wind_comp'] }}</td>
-                <td>{{ data['OFP']['general']['costindex'] }}</td>
-                <td>{{ data['OFP']['general']['initial_altitude'] }}ft</td>
-              </tr>
-            </table>
-			<p><pre>Steps: {{ data['OFP']['general']['stepclimb_string'] }}</pre></p>
-	  </div>
-    </div>
-  </div>
-
-    <div class="accordion-item">
-    <h2 class="accordion-header" id="panelsStayOpen-heading-destination">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-destination" aria-expanded="true" aria-controls="panelsStayOpen-collapse-destination">
-        Destination {{ data['OFP']['destination']['icao_code'] }}/{{ data['OFP']['destination']['iata_code'] }}
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapse-destination" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-heading-destination">
-      <div class="accordion-body">
-			<table class="table table-striped">
-              <thead>
-              <tr>
-                <th scope="col">RWY</th>
-				<th scope="col">Elev.</th>
-				<th scope="col">T.Alt</th>
-				<th scope="col">T.FL</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>{{ data['OFP']['destination']['plan_rwy'] }}</td>
-                <td>{{ data['OFP']['destination']['elevation'] }}</td>
-                <td>{{ data['OFP']['destination']['trans_alt'] }}</td>
-                <td>{{ data['OFP']['destination']['trans_level'] }}</td>
-              </tr>
-            </table>
-			
-			<nav>
-              <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
-                <a class="nav-link active" id="nav-destination-metar-tab" data-bs-toggle="tab" href="#nav-destination-metar" role="tab" aria-controls="nav-destination-metar" aria-selected="true">METAR</a>
-                <a class="nav-link" id="nav-destination-taf-tab" data-bs-toggle="tab" href="#nav-destination-taf" role="tab" aria-controls="nav-destination-taf" aria-selected="false">TAF</a>
-                <a class="nav-link" id="nav-destination-atis-tab" data-bs-toggle="tab" href="#nav-destination-atis" role="tab" aria-controls="nav-destination-atis" aria-selected="false">ATIS</a>
-              </div>
-            </nav>
-			
-			<div class="tab-content" id="nav-tabContent">
-              <div class="tab-pane fade active show" id="nav-destination-metar" role="tabpanel" aria-labelledby="nav-destination-metar-tab">
-				<p class="px-3 mono" id="content-destination-metar">{{ data['OFP']['destination']['metar'] }}</p>
-                <button type="button" class="btn btn-dark" onClick="update_metar('content-destination-metar', '{{ data['OFP']['destination']['icao_code'] }}')">Update</button>
-              </div>
-              <div class="tab-pane fade" id="nav-destination-taf" role="tabpanel" aria-labelledby="nav-destination-taf-tab">
-                <p class="px-3 mono">{{ data['OFP']['destination']['taf'] }}</p>
-              </div>
-              <div class="tab-pane fade" id="nav-destination-atis" role="tabpanel" aria-labelledby="nav-destination-atis-tab">
-                <p class="px-3 mono">{{ data['OFP']['destination']['atis']['message'] }}</p>
-              </div>
-            </div>
-      </div>
-    </div>
-  </div>
-  
-    <div class="accordion-item">
-    <h2 class="accordion-header" id="panelsStayOpen-heading-alternate">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-alternate" aria-expanded="true" aria-controls="panelsStayOpen-collapse-alternate">
-        Alternate {{ data['OFP']['alternate']['icao_code'] }}/{{ data['OFP']['alternate']['iata_code'] }}
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapse-alternate" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-alternate">
-      <div class="accordion-body">
-			<table class="table table-striped">
-              <thead>
-              <tr>
-                <th scope="col">RWY</th>
-				<th scope="col">Elev.</th>
-				<th scope="col">T.Alt</th>
-				<th scope="col">T.FL</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>{{ data['OFP']['alternate']['plan_rwy'] }}</td>
-                <td>{{ data['OFP']['alternate']['elevation'] }}</td>
-                <td>{{ data['OFP']['alternate']['trans_alt'] }}</td>
-                <td>{{ data['OFP']['alternate']['trans_level'] }}</td>
-              </tr>
-            </table>
-		
-			<p><pre>Route: {{ data['OFP']['alternate']['route'] }}</pre></p>
-
-			<nav>
-              <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
-                <a class="nav-link active" id="nav-alternate-metar-tab" data-bs-toggle="tab" href="#nav-alternate-metar" role="tab" aria-controls="nav-alternate-metar" aria-selected="true">METAR</a>
-                <a class="nav-link" id="nav-alternate-taf-tab" data-bs-toggle="tab" href="#nav-alternate-taf" role="tab" aria-controls="nav-alternate-taf" aria-selected="false">TAF</a>
-                <a class="nav-link" id="nav-alternate-atis-tab" data-bs-toggle="tab" href="#nav-alternate-atis" role="tab" aria-controls="nav-alternate-atis" aria-selected="false">ATIS</a>
-              </div>
-            </nav>
-			
-			<div class="tab-content" id="nav-tabContent">
-              <div class="tab-pane fade active show" id="nav-alternate-metar" role="tabpanel" aria-labelledby="nav-alternate-metar-tab">
-				<p class="px-3 mono" id="content-alternate-metar">{{ data['OFP']['alternate']['metar'] }}</p>
-                <button type="button" class="btn btn-dark" onClick="update_metar('content-alternate-metar', '{{ data['OFP']['alternate']['icao_code'] }}')">Update</button>
-              </div>
-              <div class="tab-pane fade" id="nav-alternate-taf" role="tabpanel" aria-labelledby="nav-alternate-taf-tab">
-                <p class="px-3 mono">{{ data['OFP']['alternate']['taf'] }}</p>
-              </div>
-              <div class="tab-pane fade" id="nav-alternate-atis" role="tabpanel" aria-labelledby="nav-alternate-atis-tab">
-                <p class="px-3 mono">{{ data['OFP']['alternate']['atis']['message'] }}</p>
-              </div>
-            </div>
-
-      </div>
-    </div>
-  </div>
-
-      <div class="accordion-item">
-    <h2 class="accordion-header" id="panelsStayOpen-heading-plain">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-plain" aria-expanded="true" aria-controls="panelsStayOpen-collapse-plain">
-        Full plain OFP
-      </button>
-    </h2>
-    <div id="panelsStayOpen-collapse-plain" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-plain">
-      <div class="accordion-body">
-		<p class="mono">{{ data['OFP']['text']['plan_html']|safe }}</p>
-      </div>
-    </div>
-  </div>
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="panelsStayOpen-headingRoute">
+			<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseRoute" aria-expanded="true" aria-controls="panelsStayOpen-collapseRoute">
+			Route
+			</button>
+		</h2>
+		<div id="panelsStayOpen-collapseRoute" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingRoute">
+			<div class="accordion-body">
+				<p class="mono">{{ data['OFP']['general']['route'] }}</p>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th scope="col">Dist</th>
+							<th scope="col">Wind</th>
+							<th scope="col">CI</th>
+							<th scope="col">Initial</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>{{ data['OFP']['general']['route_distance'] }}nm</td>
+							<td>{{ data['OFP']['general']['avg_wind_comp'] }}</td>
+							<td>{{ data['OFP']['general']['costindex'] }}</td>
+							<td>{{ data['OFP']['general']['initial_altitude'] }}ft</td>
+						</tr>
+				</table>
+				<p>
+				<pre>Steps: {{ data['OFP']['general']['stepclimb_string'] }}</pre>
+				</p>
+			</div>
+		</div>
+	</div>
+	
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="panelsStayOpen-heading-destination">
+			<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-destination" aria-expanded="true" aria-controls="panelsStayOpen-collapse-destination">
+			Destination {{ data['OFP']['destination']['icao_code'] }}/{{ data['OFP']['destination']['iata_code'] }}
+			</button>
+		</h2>
+		<div id="panelsStayOpen-collapse-destination" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-heading-destination">
+			<div class="accordion-body">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th scope="col">RWY</th>
+							<th scope="col">Elev.</th>
+							<th scope="col">T.Alt</th>
+							<th scope="col">T.FL</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>{{ data['OFP']['destination']['plan_rwy'] }}</td>
+							<td>{{ data['OFP']['destination']['elevation'] }}</td>
+							<td>{{ data['OFP']['destination']['trans_alt'] }}</td>
+							<td>{{ data['OFP']['destination']['trans_level'] }}</td>
+						</tr>
+				</table>
+				<nav>
+					<div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+						<a class="nav-link active" id="nav-destination-metar-tab" data-bs-toggle="tab" href="#nav-destination-metar" role="tab" aria-controls="nav-destination-metar" aria-selected="true">METAR</a>
+						<a class="nav-link" id="nav-destination-taf-tab" data-bs-toggle="tab" href="#nav-destination-taf" role="tab" aria-controls="nav-destination-taf" aria-selected="false">TAF</a>
+						<a class="nav-link" id="nav-destination-atis-tab" data-bs-toggle="tab" href="#nav-destination-atis" role="tab" aria-controls="nav-destination-atis" aria-selected="false">ATIS</a>
+					</div>
+				</nav>
+				<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade active show" id="nav-destination-metar" role="tabpanel" aria-labelledby="nav-destination-metar-tab">
+						<p class="px-3 mono" id="content-destination-metar">{{ data['OFP']['destination']['metar'] }}</p>
+						<button type="button" class="btn btn-dark" onClick="update_metar('content-destination-metar', '{{ data['OFP']['destination']['icao_code'] }}')">Update</button>
+					</div>
+					<div class="tab-pane fade" id="nav-destination-taf" role="tabpanel" aria-labelledby="nav-destination-taf-tab">
+						<p class="px-3 mono">{{ data['OFP']['destination']['taf'] }}</p>
+					</div>
+					<div class="tab-pane fade" id="nav-destination-atis" role="tabpanel" aria-labelledby="nav-destination-atis-tab">
+						<p class="px-3 mono">{{ data['OFP']['destination']['atis']['message'] }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="panelsStayOpen-heading-alternate">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-alternate" aria-expanded="true" aria-controls="panelsStayOpen-collapse-alternate">
+			Alternate {{ data['OFP']['alternate']['icao_code'] }}/{{ data['OFP']['alternate']['iata_code'] }}
+			</button>
+		</h2>
+		<div id="panelsStayOpen-collapse-alternate" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-alternate">
+			<div class="accordion-body">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th scope="col">RWY</th>
+							<th scope="col">Elev.</th>
+							<th scope="col">T.Alt</th>
+							<th scope="col">T.FL</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>{{ data['OFP']['alternate']['plan_rwy'] }}</td>
+							<td>{{ data['OFP']['alternate']['elevation'] }}</td>
+							<td>{{ data['OFP']['alternate']['trans_alt'] }}</td>
+							<td>{{ data['OFP']['alternate']['trans_level'] }}</td>
+						</tr>
+				</table>
+				<p>
+				<pre>Route: {{ data['OFP']['alternate']['route'] }}</pre>
+				</p>
+				<nav>
+					<div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+						<a class="nav-link active" id="nav-alternate-metar-tab" data-bs-toggle="tab" href="#nav-alternate-metar" role="tab" aria-controls="nav-alternate-metar" aria-selected="true">METAR</a>
+						<a class="nav-link" id="nav-alternate-taf-tab" data-bs-toggle="tab" href="#nav-alternate-taf" role="tab" aria-controls="nav-alternate-taf" aria-selected="false">TAF</a>
+						<a class="nav-link" id="nav-alternate-atis-tab" data-bs-toggle="tab" href="#nav-alternate-atis" role="tab" aria-controls="nav-alternate-atis" aria-selected="false">ATIS</a>
+					</div>
+				</nav>
+				<div class="tab-content" id="nav-tabContent">
+					<div class="tab-pane fade active show" id="nav-alternate-metar" role="tabpanel" aria-labelledby="nav-alternate-metar-tab">
+						<p class="px-3 mono" id="content-alternate-metar">{{ data['OFP']['alternate']['metar'] }}</p>
+						<button type="button" class="btn btn-dark" onClick="update_metar('content-alternate-metar', '{{ data['OFP']['alternate']['icao_code'] }}')">Update</button>
+					</div>
+					<div class="tab-pane fade" id="nav-alternate-taf" role="tabpanel" aria-labelledby="nav-alternate-taf-tab">
+						<p class="px-3 mono">{{ data['OFP']['alternate']['taf'] }}</p>
+					</div>
+					<div class="tab-pane fade" id="nav-alternate-atis" role="tabpanel" aria-labelledby="nav-alternate-atis-tab">
+						<p class="px-3 mono">{{ data['OFP']['alternate']['atis']['message'] }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="panelsStayOpen-heading-plain">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse-plain" aria-expanded="true" aria-controls="panelsStayOpen-collapse-plain">
+			Full plain OFP
+			</button>
+		</h2>
+		<div id="panelsStayOpen-collapse-plain" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading-plain">
+			<div class="accordion-body">
+				<p class="mono">{{ data['OFP']['text']['plan_html']|safe }}</p>
+			</div>
+		</div>
+	</div>
 </div>
 	
 {% endblock %}
